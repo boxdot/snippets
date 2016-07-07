@@ -1,15 +1,21 @@
 // Convenience functions returning iterators to keys and values of an
 // associative container.
 
+// Convenience functions returning iterators to keys and values of an
+// associative container.
+
 namespace {
 
 template <typename Iterator>
-class PairIterator {
+class IteratorBase {
 public:
-    explicit PairIterator(Iterator it) : it_(it) {}
+    using difference_type = typename Iterator::difference_type;
+    using iterator_category = typename Iterator::iterator_category;
+
+    explicit IteratorBase(Iterator it) : it_(it) {}
     auto& operator++() { ++it_; return *this; }
-    auto operator==(PairIterator other) { return it_ == other.it_; }
-    auto operator!=(PairIterator other) { return !(*this == other); }
+    auto operator==(IteratorBase other) { return it_ == other.it_; }
+    auto operator!=(IteratorBase other) { return !(*this == other); }
 
 protected:
     Iterator it_;
@@ -17,21 +23,25 @@ protected:
 
 
 template <typename Iterator>
-class KeysIterator : public PairIterator<Iterator> {
+class KeysIterator : public IteratorBase<Iterator> {
 public:
-    explicit KeysIterator(Iterator it) : PairIterator<Iterator>(it) {}
-    auto operator*() {
-        return PairIterator<Iterator>::it_->first;
-    }
+    using value_type = typename Iterator::value_type::first_type;
+    using pointer = value_type*;
+    using reference = value_type&;
+
+    using IteratorBase<Iterator>::IteratorBase;
+    auto operator*() { return IteratorBase<Iterator>::it_->first; }
 };
 
 template <typename Iterator>
-class ValuesIterator : public PairIterator<Iterator> {
+class ValuesIterator : public IteratorBase<Iterator> {
 public:
-    using PairIterator<Iterator>::PairIterator;
-    auto operator*() {
-        return PairIterator<Iterator>::it_->second;
-    }
+    using value_type = typename Iterator::value_type::second_type;
+    using pointer = value_type*;
+    using reference = value_type&;
+
+    using IteratorBase<Iterator>::IteratorBase;
+    auto operator*() { return IteratorBase<Iterator>::it_->second; }
 };
 
 template <typename Container, template<typename T> class WrapperIterator>
