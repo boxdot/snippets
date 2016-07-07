@@ -1,5 +1,5 @@
 #include "../split.h"
-#include <catch>
+#include <catch.hpp>
 
 TEST_CASE("Simple split", "[split]")
 {
