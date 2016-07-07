@@ -1,5 +1,6 @@
 set(TESTS
     test_keys_values_iterator
+    test_split
 )
 
 add_library(catch_main catch_main.cpp)
