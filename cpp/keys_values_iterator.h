@@ -1,10 +1,6 @@
 // Convenience functions returning iterators to keys and values of an
 // associative container.
 
-#include <unordered_map>
-#include <vector>
-
-
 namespace {
 
 template <typename Iterator>
